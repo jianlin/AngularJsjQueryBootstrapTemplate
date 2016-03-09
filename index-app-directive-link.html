@@ -20,11 +20,25 @@
                 .controller("myController", function() {
                     var vm = this;
 
-                    vm.foo = 123;
-                
-                    vm.getReversedDigitNumber = function() {
-                        return +(vm.foo.toString().split("").reverse().join(""));
-                    }
+                    this.foo = 123;
+                })
+                .directive("myDirective", function() {
+                    return {
+                        scope: { bar: "=" },
+                        
+                        template: "here is my value {{ bar }} <input type='text' ng-model='bar'>"
+                                    + "<button ng-click='inc()'>increment</button>"
+                                    + "<button ng-click='dec()'>decrement</button>",
+                        
+                        link: function(scope, elem, attrs) {
+                            scope.inc = function() {
+                                scope.bar++;
+                            };
+                            scope.dec = function() {
+                                scope.bar--;
+                            }
+                        }
+                    };
                 });
 
         </script>
@@ -41,7 +55,11 @@
                         <p><input type="text" ng-model="myCtrl.foo"></p>
                         <p>the value is {{ myCtrl.foo }}</p>
                         <p>the value squared is {{ myCtrl.foo * myCtrl.foo }}</p>
-                        <p>if reversed: {{ myCtrl.getReversedDigitNumber() }}</p>
+
+                        <p>the value is <span ng-bind="myCtrl.foo"></span></p> <!-- another way -->
+                        <p>is the value even? {{ myCtrl.foo % 2 === 0 }}</p>
+                        <p>is the value odd? <span ng-bind="myCtrl.foo % 2 === 1"></span></p> <!-- another way -->
+                        <p><input type="text" ng-model="myCtrl.foo"></p>
 
                     </section>
                 </main>
@@ -50,9 +68,7 @@
 
                         sidebar
 
-                        <p>the value is <span ng-bind="myCtrl.foo"></span></p> <!-- another way -->
-                        <p>is the value even? {{ myCtrl.foo % 2 === 0 }}</p>
-                        <p><input type="text" ng-model="myCtrl.foo"></p>
+                        <my-directive bar="myCtrl.foo"></my-directive>
 
                     </section>
                 </aside>
